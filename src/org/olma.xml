@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="http://moise.sourceforge.net/xml/os.xsl" type="text/xsl" ?>
+<organisational-specification
+        id="auction"
+        os-version="0.8"
+
+        xmlns='http://moise.sourceforge.net/os'
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:schemaLocation='http://moise.sourceforge.net/os
+                        http://moise.sourceforge.net/xml/os.xsd'>
+
+    <structural-specification>
+        <group-specification id="olmaGroup">
+            <roles>
+                <role id="visitor" min="1" max="1"/>
+                <role id="mover" min="1" max="1"/>
+                <role id="buyer" min="1" max="2"/>
+            </roles>
+        </group-specification>
+    </structural-specification>
+
+    <functional-specification>
+        <scheme id="olmaSchema">
+            <goal id="attendOlma">
+                <plan operator="parallel">
+                    <goal id="goToOlmaMessen">
+                        <plan operator="parallel">
+                            <goal id="takeBus3"/>
+                            <goal id="takeBus5">
+                                <depends-on goal="takeBus3"/>
+                            </goal>
+                        </plan>
+                    </goal>
+                    <goal id="buyTickets" min="1">
+                        <plan operator="choice">
+                            <goal id="buyOnSite" min="1">
+                                <plan operator="parallel">
+                                    <goal id="goToOlmaMessen">
+                                        <plan operator="parallel">
+                                            <goal id="takeBus3"/>
+                                            <goal id="takeBus5">
+                                                <depends-on goal="takeBus3"/>
+                                            </goal>
+                                        </plan>
+                                    </goal>
+                                </plan>
+                            </goal>
+                            <goal id="buyFromWebsite" min="1">
+                                <plan operator="parallel">
+                                    <goal id="purchaseTicketsOnWebsite" min="1">
+                                        <depends-on goal="goToOlmaMessen"/>
+                                    </goal>
+                                    <goal id="printTickets" min="1">
+                                        <depends-on goal="purchaseTicketsOnWebsite"/>
+                                    </goal>
+                                </plan>
+                            </goal>
+                        </plan>
+                    </goal>
+                </plan>
+            </goal>
+            <mission id="mVisitor" min="1" max="1">
+                <goal id="attendOlma"/>
+                <goal id="buyTickets"/>
+                <goal id="goToOlmaMessen"/>
+                <goal id="takeBus3"/>
+                <goal id="takeBus5"/>
+            </mission>
+            <mission id="mMover" min="1" max="1">
+                <goal id="attendOlma"/>
+                <goal id="takeBus3"/>
+                <goal id="takeBus5"/>
+            </mission>
+            <mission id="mBuyer" min="2" max="2">
+                <goal id="attendOlma"/>
+                <goal id="buyOnSite"/>
+                <goal id="buyFromWebsite"/>
+                <goal id="purchaseTicketsOnWebsite"/>
+                <goal id="printTickets"/>
+                <goal id="takeBus3"/>
+                <goal id="takeBus5"/>
+            </mission>
+        </scheme>
+    </functional-specification>
+
+    <normative-specification>
+        <norm id="n1" type="obligation" role="visitor" mission="mVisitor"/>
+        <norm id="n2" type="obligation" role="mover" mission="mMover"/>
+        <norm id="n4" type="obligation" role="buyer" mission="mBuyer"/>
+    </normative-specification>
+
+</organisational-specification>

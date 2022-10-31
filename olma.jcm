@@ -1,0 +1,17 @@
+mas olma {
+    agent ale    : agent.asl
+    agent simon  : agent.asl
+    agent andrei : agent.asl
+    agent jeremy : agent.asl
+
+    organisation olmaOrg : olma.xml {
+        group oGroup : olmaGroup {
+            players: ale    visitor
+                     simon  mover
+                     andrei buyer
+                     jeremy buyer
+            responsible-for: oSchema
+        }
+        scheme oSchema : olmaSchema
+    }
+}
